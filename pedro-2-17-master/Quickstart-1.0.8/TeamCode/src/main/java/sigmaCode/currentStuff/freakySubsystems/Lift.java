@@ -1,5 +1,6 @@
 package sigmaCode.currentStuff.freakySubsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static sigmaCode.currentStuff.freakySubsystems.Lift.liftState.DOWN;
 import static sigmaCode.currentStuff.freakySubsystems.Lift.liftState.MIDDLE;
 import static sigmaCode.currentStuff.freakySubsystems.Lift.liftState.UP;
@@ -13,12 +14,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import sigmaCode.currentStuff.SigmaRamenAuton;
+
 @Config
 public class Lift extends SubsystemBase {
     private DcMotorEx vSlide;
     private liftState ls;
     private PIDController controller;
-    private int target;
+    public int target;
+    public int pos;
     private double p = .06, i = 0, d = .0002;
     private static double f = 0.03;
     private final double ticks_in_degrees = 700 / 180.0;
@@ -29,6 +33,7 @@ public class Lift extends SubsystemBase {
         this.vSlide = vSlide;
         controller = new PIDController(p, i, d);
         controller.setTolerance(10);
+        pos = vSlide.getCurrentPosition();
     }
     public void setTarget(liftState state){
         ls = state;
@@ -49,10 +54,10 @@ public class Lift extends SubsystemBase {
     }
     public void periodic(){
         controller.setPID(p, i, d);
-        int pos = vSlide.getCurrentPosition();
+        pos = vSlide.getCurrentPosition();
         double pid = controller.calculate(pos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
-        double power = pid + ff;
+        //double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+        double power = pid + f;
         vSlide.setPower(power);
     }
 }

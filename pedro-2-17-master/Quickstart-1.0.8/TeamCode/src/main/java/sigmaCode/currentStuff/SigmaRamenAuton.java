@@ -2,6 +2,7 @@ package sigmaCode.currentStuff;
 
 import static sigmaCode.currentStuff.freakySubsystems.Lift.liftState.MIDDLE;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
@@ -16,6 +17,8 @@ import com.pedropathing.util.Constants;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 import sigmaCode.currentStuff.feinCommands.FollowPathCommand;
@@ -25,9 +28,10 @@ import sigmaCode.currentStuff.feinCommands.LiftCommand;
 import sigmaCode.currentStuff.freakySubsystems.Lift;
 import sigmaCode.currentStuff.freakySubsystems.Lift.liftState;
 import sigmaCode.currentStuff.freakySubsystems.LiftClaw;
+import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
 
-@Autonomous(name = "sig")
+@Autonomous(name = "5 thousand specs?")
 public class SigmaRamenAuton extends LinearOpMode {
     private ElapsedTime timer;
     private final Pose startPose = new Pose(7.2, 63, Math.toRadians(0));
@@ -49,12 +53,13 @@ public class SigmaRamenAuton extends LinearOpMode {
         line13 = GeneratedPaths.line13;
     }
     public void runOpMode() {
+        TelemetryUtil.setup(telemetry);
         timer = new ElapsedTime();
         timer.reset();
         CommandScheduler.getInstance().reset();
         Constants.setConstants(FConstants.class, LConstants.class);
         izzy = new Izzy(hardwareMap, startPose);
-        //buildPaths();
+        buildPaths();
         CommandScheduler.getInstance().schedule(
                 new RunCommand(() -> izzy.follower.update()),
                 new SequentialCommandGroup(
@@ -73,7 +78,10 @@ public class SigmaRamenAuton extends LinearOpMode {
         );
         waitForStart();
         while(!isStopRequested() && opModeIsActive()){
-            izzy.run();
+            izzy.loop();
+            TelemetryUtil.addData("target", izzy.lift.target);
+            TelemetryUtil.addData("pos", izzy.lift.pos);
+            TelemetryUtil.update();
         }
         CommandScheduler.getInstance().reset();
     }

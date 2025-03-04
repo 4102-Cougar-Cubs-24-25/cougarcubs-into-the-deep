@@ -15,5 +15,6 @@ public class LiftCommand extends InstantCommand {
     }
     public void execute(){
         lift.setTarget(state);
+        lift.periodic();
     }
 }

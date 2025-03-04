@@ -16,6 +16,7 @@ import pedroPathing.constants.LConstants;
 import sigmaCode.currentStuff.freakySubsystems.Lift;
 import sigmaCode.currentStuff.freakySubsystems.LiftClaw;
 import sigmaCode.currentStuff.freakySubsystems.LiftWrist;
+import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
 public class Izzy extends Robot {
     public Servo vClaw, lvWrist, rvWrist;
@@ -43,5 +44,7 @@ public class Izzy extends Robot {
     public void loop(){
         CommandScheduler.getInstance().run();
         follower.update();
+        TelemetryUtil.addData("current pos", vSlide.getCurrentPosition());
+        TelemetryUtil.addData("target pos", vSlide.getTargetPosition());
     }
 }
