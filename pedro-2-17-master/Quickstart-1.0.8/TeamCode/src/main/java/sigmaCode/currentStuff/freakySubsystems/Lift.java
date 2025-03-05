@@ -23,8 +23,7 @@ public class Lift extends SubsystemBase {
     private PIDController controller;
     public int target;
     public int pos;
-    private double p = .06, i = 0, d = .0002;
-    private static double f = 0.03;
+    private double p = .029, i = 0, d = .00035, f = .035;
     private final double ticks_in_degrees = 700 / 180.0;
     public enum liftState{
         UP, MIDDLE, DOWN;
@@ -32,8 +31,8 @@ public class Lift extends SubsystemBase {
     public Lift(DcMotorEx vSlide){
         this.vSlide = vSlide;
         controller = new PIDController(p, i, d);
-        controller.setTolerance(10);
         pos = vSlide.getCurrentPosition();
+        vSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void setTarget(liftState state){
         ls = state;
@@ -56,8 +55,8 @@ public class Lift extends SubsystemBase {
         controller.setPID(p, i, d);
         pos = vSlide.getCurrentPosition();
         double pid = controller.calculate(pos, target);
-        //double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
         double power = pid + f;
         vSlide.setPower(power);
+        TelemetryUtil.addData("pls work", ls);
     }
 }

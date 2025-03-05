@@ -4,8 +4,9 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
 
 import sigmaCode.currentStuff.freakySubsystems.Lift;
+import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
-public class LiftCommand extends InstantCommand {
+public class LiftCommand extends CommandBase {
     private Lift lift;
     private Lift.liftState state;
     public LiftCommand(Lift lift, Lift.liftState state){
@@ -15,6 +16,13 @@ public class LiftCommand extends InstantCommand {
     }
     public void execute(){
         lift.setTarget(state);
-        lift.periodic();
+        //lift.periodic();
+    }
+    public boolean isFinished(){
+        if(!lift.busy()){
+            TelemetryUtil.addData("running", "sig");
+            return true;
+        }
+        return false;
     }
 }

@@ -31,6 +31,7 @@ public class Izzy extends Robot {
         vSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         vSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rvWrist = hardwareMap.get(Servo.class, "rvWrist");
         lvWrist = hardwareMap.get(Servo.class, "lvWrist");
         vClaw = hardwareMap.get(Servo.class, "vClaw");
@@ -44,7 +45,5 @@ public class Izzy extends Robot {
     public void loop(){
         CommandScheduler.getInstance().run();
         follower.update();
-        TelemetryUtil.addData("current pos", vSlide.getCurrentPosition());
-        TelemetryUtil.addData("target pos", vSlide.getTargetPosition());
     }
 }

@@ -30,8 +30,7 @@ public class PIDF extends OpMode {
         controller.setPID(p, i, d);
         int pos = vSlide.getCurrentPosition();
         double pid = controller.calculate(pos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
-        double power = pid + ff;
+        double power = pid + f;
         vSlide.setPower(power);
         telemetry.addData("pos", pos);
         telemetry.addData("target", target);

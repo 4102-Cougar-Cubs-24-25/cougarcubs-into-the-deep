@@ -25,9 +25,11 @@ import sigmaCode.currentStuff.feinCommands.FollowPathCommand;
 import sigmaCode.currentStuff.feinCommands.Izzy;
 import sigmaCode.currentStuff.feinCommands.LiftClawCommand;
 import sigmaCode.currentStuff.feinCommands.LiftCommand;
+import sigmaCode.currentStuff.feinCommands.LiftWristCommand;
 import sigmaCode.currentStuff.freakySubsystems.Lift;
 import sigmaCode.currentStuff.freakySubsystems.Lift.liftState;
 import sigmaCode.currentStuff.freakySubsystems.LiftClaw;
+import sigmaCode.currentStuff.freakySubsystems.LiftWrist;
 import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
 
@@ -64,16 +66,21 @@ public class SigmaRamenAuton extends LinearOpMode {
                 new RunCommand(() -> izzy.follower.update()),
                 new SequentialCommandGroup(
                         new ParallelCommandGroup(
-                                //new FollowPathCommand(izzy.follower, line1),
-                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
+                                new FollowPathCommand(izzy.follower, line1),
                                 new LiftCommand(izzy.lift, Lift.liftState.MIDDLE),
-                                new WaitCommand(3000)
+                                new WaitCommand(1000)
                                 ),
-                        new LiftCommand(izzy.lift, Lift.liftState.UP),
-                        new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.CLOSE),
-                        new LiftCommand(izzy.lift, Lift.liftState.DOWN),
-                        new WaitCommand(1000)
-                        //new FollowPathCommand(izzy.follower, line2)
+                        new ParallelCommandGroup(
+                                new LiftCommand(izzy.lift, Lift.liftState.UP),
+                                new WaitCommand(1000)
+                                ),
+                        new ParallelCommandGroup(
+                                new LiftCommand(izzy.lift, Lift.liftState.DOWN),
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
+                                new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK),
+                                new FollowPathCommand(izzy.follower, line2),
+                                new WaitCommand(3000)
+                        )
                 )
         );
         waitForStart();
