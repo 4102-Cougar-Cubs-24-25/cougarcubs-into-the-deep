@@ -19,7 +19,7 @@ import sigmaCode.currentStuff.SigmaRamenAuton;
 @Config
 public class Lift extends SubsystemBase {
     private DcMotorEx vSlide;
-    private liftState ls;
+    public liftState ls;
     private PIDController controller;
     public int target;
     public int pos;
@@ -32,6 +32,7 @@ public class Lift extends SubsystemBase {
         this.vSlide = vSlide;
         controller = new PIDController(p, i, d);
         pos = vSlide.getCurrentPosition();
+        controller.setTolerance(10);
         vSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void setTarget(liftState state){
@@ -57,6 +58,5 @@ public class Lift extends SubsystemBase {
         double pid = controller.calculate(pos, target);
         double power = pid + f;
         vSlide.setPower(power);
-        TelemetryUtil.addData("state", ls);
     }
 }

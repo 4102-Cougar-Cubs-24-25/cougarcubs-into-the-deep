@@ -81,9 +81,12 @@ public class SigmaRamenAuton extends LinearOpMode {
         waitForStart();
         while(!isStopRequested() && opModeIsActive()){
             izzy.loop();
+            TelemetryUtil.addData("setting state", LiftCommand.s);
+            TelemetryUtil.addData("current state", izzy.lift.ls);
             TelemetryUtil.addData("target", izzy.lift.target);
             TelemetryUtil.addData("pos", izzy.lift.pos);
             TelemetryUtil.addData("lift moving?", izzy.lift.busy());
+            TelemetryUtil.addData("run count", LiftCommand.runCount);
             TelemetryUtil.update();
         }
         CommandScheduler.getInstance().reset();
