@@ -67,19 +67,14 @@ public class SigmaRamenAuton extends LinearOpMode {
                 new SequentialCommandGroup(
                         new ParallelCommandGroup(
                                 new FollowPathCommand(izzy.follower, line1),
-                                new LiftCommand(izzy.lift, Lift.liftState.MIDDLE),
-                                new WaitCommand(1000)
+                                new LiftCommand(izzy.lift, Lift.liftState.MIDDLE)
                                 ),
-                        new ParallelCommandGroup(
-                                new LiftCommand(izzy.lift, Lift.liftState.UP),
-                                new WaitCommand(1000)
-                                ),
+                        new LiftCommand(izzy.lift, Lift.liftState.UP),
                         new ParallelCommandGroup(
                                 new LiftCommand(izzy.lift, Lift.liftState.DOWN),
                                 new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
                                 new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK),
-                                new FollowPathCommand(izzy.follower, line2),
-                                new WaitCommand(3000)
+                                new FollowPathCommand(izzy.follower, line2)
                         )
                 )
         );
@@ -88,6 +83,7 @@ public class SigmaRamenAuton extends LinearOpMode {
             izzy.loop();
             TelemetryUtil.addData("target", izzy.lift.target);
             TelemetryUtil.addData("pos", izzy.lift.pos);
+            TelemetryUtil.addData("lift moving?", izzy.lift.busy());
             TelemetryUtil.update();
         }
         CommandScheduler.getInstance().reset();

@@ -57,6 +57,6 @@ public class Lift extends SubsystemBase {
         double pid = controller.calculate(pos, target);
         double power = pid + f;
         vSlide.setPower(power);
-        TelemetryUtil.addData("pls work", ls);
+        TelemetryUtil.addData("state", ls);
     }
 }

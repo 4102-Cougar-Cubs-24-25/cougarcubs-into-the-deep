@@ -20,7 +20,6 @@ public class LiftCommand extends CommandBase {
     }
     public boolean isFinished(){
         if(!lift.busy()){
-            TelemetryUtil.addData("running", "sig");
             return true;
         }
         return false;
