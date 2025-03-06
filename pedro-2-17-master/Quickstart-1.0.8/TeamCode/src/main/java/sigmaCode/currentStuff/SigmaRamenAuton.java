@@ -66,12 +66,18 @@ public class SigmaRamenAuton extends LinearOpMode {
                 new RunCommand(() -> izzy.follower.update()),
                 new SequentialCommandGroup(
                         new ParallelCommandGroup(
-                                new FollowPathCommand(izzy.follower, line1),
-                                new LiftCommand(izzy.lift, Lift.liftState.MIDDLE)
+                                new SequentialCommandGroup(
+                                        new LiftCommand(izzy, Lift.liftState.MIDDLE),
+                                        new WaitCommand(500)
                                 ),
-                        new LiftCommand(izzy.lift, Lift.liftState.UP),
+                                new FollowPathCommand(izzy.follower, line1)
+                                ),
+                        new SequentialCommandGroup(
+                                new LiftCommand(izzy, Lift.liftState.UP),
+                                new WaitCommand(500)
+                        ),
                         new ParallelCommandGroup(
-                                new LiftCommand(izzy.lift, Lift.liftState.DOWN),
+                                new LiftCommand(izzy, Lift.liftState.DOWN),
                                 new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
                                 new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK),
                                 new FollowPathCommand(izzy.follower, line2)
@@ -81,12 +87,11 @@ public class SigmaRamenAuton extends LinearOpMode {
         waitForStart();
         while(!isStopRequested() && opModeIsActive()){
             izzy.loop();
-            TelemetryUtil.addData("setting state", LiftCommand.s);
             TelemetryUtil.addData("current state", izzy.lift.ls);
             TelemetryUtil.addData("target", izzy.lift.target);
             TelemetryUtil.addData("pos", izzy.lift.pos);
             TelemetryUtil.addData("lift moving?", izzy.lift.busy());
-            TelemetryUtil.addData("run count", LiftCommand.runCount);
+            TelemetryUtil.addData("run count", Lift.runCount);
             TelemetryUtil.update();
         }
         CommandScheduler.getInstance().reset();

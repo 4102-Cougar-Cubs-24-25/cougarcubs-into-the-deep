@@ -23,6 +23,8 @@ public class Lift extends SubsystemBase {
     private PIDController controller;
     public int target;
     public int pos;
+    public static int runCount;
+    private double power;
     private double p = .029, i = 0, d = .00035, f = .035;
     private final double ticks_in_degrees = 700 / 180.0;
     public enum liftState{
@@ -37,7 +39,8 @@ public class Lift extends SubsystemBase {
     }
     public void setTarget(liftState state){
         ls = state;
-        switch (ls){
+        runCount++;
+        switch (state){
             case UP:
                 target = 1500;
                 break;
@@ -47,6 +50,9 @@ public class Lift extends SubsystemBase {
             case DOWN:
                 target = 0;
                 break;
+            default:
+                target = -1;
+                break;
         }
     }
     public boolean busy(){
@@ -55,8 +61,7 @@ public class Lift extends SubsystemBase {
     public void periodic(){
         controller.setPID(p, i, d);
         pos = vSlide.getCurrentPosition();
-        double pid = controller.calculate(pos, target);
-        double power = pid + f;
+        power = controller.calculate(pos, target) + f;
         vSlide.setPower(power);
     }
 }

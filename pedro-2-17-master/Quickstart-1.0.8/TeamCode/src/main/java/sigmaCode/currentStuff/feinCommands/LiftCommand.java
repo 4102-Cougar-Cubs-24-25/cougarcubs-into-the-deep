@@ -6,21 +6,18 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import sigmaCode.currentStuff.freakySubsystems.Lift;
 import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
-public class LiftCommand extends CommandBase {
-    private Lift lift;
-    private Lift.liftState state;
-    public static Lift.liftState s;
+public class LiftCommand extends InstantCommand {
     public static int runCount = 0;
-
-    public LiftCommand(Lift lift, Lift.liftState state){
-        this.lift = lift;
+    private Izzy izzy;
+    private Lift.liftState state;
+    public LiftCommand(Izzy izzy, Lift.liftState state){
+        super(() ->
+                izzy.lift.setTarget(state));
+        this.izzy = izzy;
         this.state = state;
-        s = state;
-        addRequirements(lift);
-        runCount++;
+    }
+    public void initialize(){
+        izzy.lift.setTarget(state);
     }
 
-    public void execute(){
-        lift.setTarget(state);
-    }
 }
