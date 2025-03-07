@@ -12,7 +12,6 @@ import com.rowanmcalpin.nextftc.pedro.FollowPath;
 import com.rowanmcalpin.nextftc.pedro.PedroOpMode;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import sigmaCode.currentStuff.GeneratedPaths;
 import sigmaCode.oldStuff.sigmaSubsystems.LVWrist;
 import sigmaCode.oldStuff.sigmaSubsystems.RVWrist;
 import sigmaCode.oldStuff.sigmaSubsystems.Slides;

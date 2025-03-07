@@ -12,7 +12,7 @@ public class LiftWristCommand extends CommandBase {
         this.state = state;
         addRequirements(liftWrist);
     }
-    public void initialize(LiftWrist.wristState state){
+    public void execute(){
         liftWrist.go(state);
     }
     public boolean isFinished(){

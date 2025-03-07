@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import sigmaCode.currentStuff.GeneratedPaths;
 
 @Autonomous(name = "pedro generated auto", group = "Examples")
 public class noAuraAutonGen extends OpMode {

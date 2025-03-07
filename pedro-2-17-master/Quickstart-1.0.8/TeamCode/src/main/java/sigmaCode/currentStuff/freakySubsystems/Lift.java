@@ -42,10 +42,10 @@ public class Lift extends SubsystemBase {
         runCount++;
         switch (state){
             case UP:
-                target = 1500;
+                target = 2350;
                 break;
             case MIDDLE:
-                target = 1200;
+                target = 1700;
                 break;
             case DOWN:
                 target = 0;

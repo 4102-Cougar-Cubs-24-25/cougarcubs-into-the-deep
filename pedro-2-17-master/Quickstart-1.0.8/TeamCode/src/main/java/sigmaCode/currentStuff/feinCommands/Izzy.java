@@ -18,7 +18,7 @@ import sigmaCode.currentStuff.freakySubsystems.LiftClaw;
 import sigmaCode.currentStuff.freakySubsystems.LiftWrist;
 import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
-public class Izzy extends Robot {
+public class Izzy {
     public Servo vClaw, lvWrist, rvWrist;
     public DcMotorEx vSlide;
     public Follower follower;
@@ -44,6 +44,12 @@ public class Izzy extends Robot {
     }
     public void loop(){
         CommandScheduler.getInstance().run();
+        TelemetryUtil.addData("current state", lift.ls);
+        TelemetryUtil.addData("target", lift.target);
+        TelemetryUtil.addData("pos", lift.pos);
+        TelemetryUtil.addData("lift moving?", lift.busy());
+        TelemetryUtil.addData("run count", Lift.runCount);
+        TelemetryUtil.update();
         follower.update();
     }
 }
