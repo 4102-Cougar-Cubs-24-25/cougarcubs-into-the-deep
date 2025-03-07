@@ -1,11 +1,9 @@
 package sigmaCode.currentStuff.feinCommands;
-
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
 
 import sigmaCode.currentStuff.freakySubsystems.Lift;
 import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
-
 public class LiftCommand extends InstantCommand {
     public static int runCount = 0;
     private Izzy izzy;
@@ -19,5 +17,4 @@ public class LiftCommand extends InstantCommand {
     public void initialize(){
         izzy.lift.setTarget(state);
     }
-
 }

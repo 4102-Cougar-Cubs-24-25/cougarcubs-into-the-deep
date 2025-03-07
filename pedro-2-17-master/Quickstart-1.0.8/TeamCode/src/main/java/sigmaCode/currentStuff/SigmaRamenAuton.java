@@ -48,7 +48,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         // Line 1
                         new BezierLine(
                                 new Point(7.200, 65.000, Point.CARTESIAN),
-                                new Point(39.000, 65.000, Point.CARTESIAN)
+                                new Point(41.000, 65.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -123,17 +123,19 @@ public class SigmaRamenAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(16.873, 9.246, Point.CARTESIAN),
                                 new Point(33.746, 27.506, Point.CARTESIAN),
-                                new Point(9.000, 33.000, Point.CARTESIAN)
+                                new Point(7.1, 33.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndVelocityConstraint(1)
+                .setZeroPowerAccelerationMultiplier(3.7)
                 .build();
         line9 = izzy.follower.pathBuilder()
                 .addPath(
                         // Line 9
                         new BezierLine(
-                                new Point(9.000, 33.000, Point.CARTESIAN),
-                                new Point(39.000, 60.000, Point.CARTESIAN)
+                                new Point(7.1, 33.000, Point.CARTESIAN),
+                                new Point(41.000, 60.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -142,8 +144,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 10
                         new BezierLine(
-                                new Point(39.000, 60.000, Point.CARTESIAN),
-                                new Point(9.000, 33.000, Point.CARTESIAN)
+                                new Point(41.000, 60.000, Point.CARTESIAN),
+                                new Point(7.1, 33.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -152,8 +154,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 11
                         new BezierLine(
-                                new Point(9.000, 33.000, Point.CARTESIAN),
-                                new Point(39.000, 68.000, Point.CARTESIAN)
+                                new Point(7.1, 33.000, Point.CARTESIAN),
+                                new Point(41, 68.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -162,8 +164,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 12
                         new BezierLine(
-                                new Point(39.000, 68.000, Point.CARTESIAN),
-                                new Point(9.000, 33.000, Point.CARTESIAN)
+                                new Point(41, 68.000, Point.CARTESIAN),
+                                new Point(7.1, 33.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -172,8 +174,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 13
                         new BezierLine(
-                                new Point(9.000, 33.000, Point.CARTESIAN),
-                                new Point(39.000, 73.000, Point.CARTESIAN)
+                                new Point(7.1, 33.000, Point.CARTESIAN),
+                                new Point(41.000, 73.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -182,8 +184,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 14
                         new BezierLine(
-                                new Point(39.000, 73.000, Point.CARTESIAN),
-                                new Point(9.000, 33.000, Point.CARTESIAN)
+                                new Point(41.000, 73.000, Point.CARTESIAN),
+                                new Point(7.100, 33.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -192,8 +194,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 15
                         new BezierLine(
-                                new Point(9.000, 33.000, Point.CARTESIAN),
-                                new Point(39.000, 78.000, Point.CARTESIAN)
+                                new Point(7.100, 33.000, Point.CARTESIAN),
+                                new Point(41.000, 78.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -202,7 +204,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 16
                         new BezierLine(
-                                new Point(39.000, 78.000, Point.CARTESIAN),
+                                new Point(41.000, 78.000, Point.CARTESIAN),
                                 new Point(9.000, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -219,19 +221,113 @@ public class SigmaRamenAuton extends LinearOpMode {
                         ),
                         new LiftCommand(izzy, Lift.liftState.UP),
                         new WaitCommand(300),
+                        //1st spec scored
                         new ParallelCommandGroup(
                                 new LiftCommand(izzy, Lift.liftState.DOWN),
                                 new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
                                 new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK),
                                 new FollowPathCommand(izzy.follower, line2)
                         ),
+                        //pushing samples
                         new FollowPathCommand(izzy.follower, line3),
                         new FollowPathCommand(izzy.follower, line4),
                         new FollowPathCommand(izzy.follower, line5),
                         new FollowPathCommand(izzy.follower, line6),
                         new FollowPathCommand(izzy.follower, line7),
                         new FollowPathCommand(izzy.follower, line8),
-                        new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.CLOSE)
+                        //at human zone
+                        new ParallelCommandGroup(
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.CLOSE),
+                                new WaitCommand(400)
+                        ),
+                        //2nd spec picked up
+                        new ParallelCommandGroup(
+                                new SequentialCommandGroup(
+                                        new WaitCommand(300),
+                                        new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.FORWARD)
+                                ),
+                                new LiftCommand(izzy, Lift.liftState.MIDDLE),
+                                new FollowPathCommand(izzy.follower, line9)
+                        ),
+                        new LiftCommand(izzy, Lift.liftState.UP),
+                        new WaitCommand(300),
+                        //2nd spec scored
+                        new ParallelCommandGroup(
+                                new FollowPathCommand(izzy.follower, line10),
+                                new LiftCommand(izzy, Lift.liftState.DOWN),
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
+                                new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK)
+                        ),
+                        //at human zone
+                        new ParallelCommandGroup(
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.CLOSE),
+                                new WaitCommand(400)
+                        ),
+                        //3rd spec picked up
+                        new ParallelCommandGroup(
+                                new SequentialCommandGroup(
+                                        new WaitCommand(300),
+                                        new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.FORWARD)
+                                ),
+                                new LiftCommand(izzy, Lift.liftState.MIDDLE),
+                                new FollowPathCommand(izzy.follower, line11)
+                        ),
+                        new LiftCommand(izzy, Lift.liftState.UP),
+                        new WaitCommand(300),
+                        //3rd spec scored
+                        new ParallelCommandGroup(
+                                new FollowPathCommand(izzy.follower, line12),
+                                new LiftCommand(izzy, Lift.liftState.DOWN),
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
+                                new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK)
+                        ),
+                        //at human zone
+                        new ParallelCommandGroup(
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.CLOSE),
+                                new WaitCommand(400)
+                        ),
+                        //4th spec picked up
+                        new ParallelCommandGroup(
+                                new SequentialCommandGroup(
+                                        new WaitCommand(300),
+                                        new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.FORWARD)
+                                ),
+                                new LiftCommand(izzy, Lift.liftState.MIDDLE),
+                                new FollowPathCommand(izzy.follower, line13)
+                        ),
+                        new LiftCommand(izzy, Lift.liftState.UP),
+                        new WaitCommand(300),
+                        //4th spec scored
+                        new ParallelCommandGroup(
+                                new FollowPathCommand(izzy.follower, line14),
+                                new LiftCommand(izzy, Lift.liftState.DOWN),
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
+                                new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK)
+                        ),
+                        //at human zone
+                        new ParallelCommandGroup(
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.CLOSE),
+                                new WaitCommand(400)
+                        ),
+                        //5th spec picked up
+                        new ParallelCommandGroup(
+                                new SequentialCommandGroup(
+                                        new WaitCommand(300),
+                                        new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.FORWARD)
+                                ),
+                                new LiftCommand(izzy, Lift.liftState.MIDDLE),
+                                new FollowPathCommand(izzy.follower, line15)
+                        ),
+                        new LiftCommand(izzy, Lift.liftState.UP),
+                        new WaitCommand(300),
+                        //5th spec scored
+                        new ParallelCommandGroup(
+                                new FollowPathCommand(izzy.follower, line16),
+                                new LiftCommand(izzy, Lift.liftState.DOWN),
+                                new LiftClawCommand(izzy.liftClaw, LiftClaw.clawState.OPEN),
+                                new LiftWristCommand(izzy.liftWrist, LiftWrist.wristState.BACK)
+                        )
+                        //parked (at human zone)
                 )
         );
     }
