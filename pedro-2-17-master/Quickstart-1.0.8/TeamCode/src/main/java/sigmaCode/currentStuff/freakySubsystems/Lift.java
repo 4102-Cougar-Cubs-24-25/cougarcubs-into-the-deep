@@ -18,17 +18,18 @@ import sigmaCode.currentStuff.SigmaRamenAuton;
 
 @Config
 public class Lift extends SubsystemBase {
-    private DcMotorEx vSlide;
-    public liftState ls;
-    private PIDController controller;
-    public int target;
-    public int pos;
-    public static int runCount;
+    private final DcMotorEx vSlide;
+    private final PIDController controller;
+    private int target, pos;
+    private boolean on = true;
     private double power;
-    private double p = .029, i = 0, d = .00035, f = .035;
+    private final double p = .0233, i = 0, d = .0004, f = 0;
     private final double ticks_in_degrees = 700 / 180.0;
     public enum liftState{
-        UP, MIDDLE, DOWN;
+        UP, MIDDLE, DOWN
+    }
+    public int getTarget(){
+        return target;
     }
     public Lift(DcMotorEx vSlide){
         this.vSlide = vSlide;
@@ -37,31 +38,50 @@ public class Lift extends SubsystemBase {
         controller.setTolerance(10);
         vSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+    public void setOn(){
+        on = !on;
+    }
+    public boolean getOn(){
+        return on;
+    }
     public void setTarget(liftState state){
-        ls = state;
-        runCount++;
         switch (state){
             case UP:
-                target = 2350;
-                break;
-            case MIDDLE:
                 target = 1700;
                 break;
+            case MIDDLE:
+                target = 1150;
+                break;
             case DOWN:
-                target = 0;
+                target = -5;
                 break;
             default:
-                target = -1;
+                target = 0;
                 break;
         }
     }
     public boolean busy(){
         return vSlide.isBusy();
     }
+    public int getPos(){
+        return pos;
+    }
     public void periodic(){
-        controller.setPID(p, i, d);
-        pos = vSlide.getCurrentPosition();
-        power = controller.calculate(pos, target) + f;
-        vSlide.setPower(power);
+        if(!on){
+            vSlide.setPower(0);
+            return;
+        } else if(target == -5){
+            if(vSlide.getCurrentPosition() >= target){
+                vSlide.setPower(-.69);
+                return;
+            }
+            vSlide.setPower(0);
+            return;
+        } else {
+            controller.setPID(p, i, d);
+            pos = vSlide.getCurrentPosition();
+            power = controller.calculate(pos, target) + f;
+            vSlide.setPower(power);
+        }
     }
 }

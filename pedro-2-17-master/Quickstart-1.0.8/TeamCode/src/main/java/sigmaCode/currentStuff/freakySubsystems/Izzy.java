@@ -1,7 +1,6 @@
-package sigmaCode.currentStuff.feinCommands;
+package sigmaCode.currentStuff.freakySubsystems;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.Robot;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.util.Constants;
@@ -13,10 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import sigmaCode.currentStuff.freakySubsystems.Lift;
-import sigmaCode.currentStuff.freakySubsystems.LiftClaw;
-import sigmaCode.currentStuff.freakySubsystems.LiftWrist;
-import sigmaCode.currentStuff.freakySubsystems.TelemetryUtil;
 
 public class Izzy {
     public Servo vClaw, lvWrist, rvWrist;
@@ -44,11 +39,9 @@ public class Izzy {
     }
     public void loop(){
         CommandScheduler.getInstance().run();
-        TelemetryUtil.addData("current state", lift.ls);
-        TelemetryUtil.addData("target", lift.target);
-        TelemetryUtil.addData("pos", lift.pos);
-        TelemetryUtil.addData("lift moving?", lift.busy());
-        TelemetryUtil.addData("run count", Lift.runCount);
+        TelemetryUtil.addData("lift target", lift.getTarget());
+        TelemetryUtil.addData("lift pos", lift.getPos());
+        TelemetryUtil.addData("lift on", lift.getOn());
         TelemetryUtil.update();
         follower.update();
     }

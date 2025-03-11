@@ -1,4 +1,4 @@
-package sigmaCode.currentStuff;
+package org.firstinspires.ftc.teamcode.sigmaCode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -54,6 +54,8 @@ public class TwoPlayerDrive extends LinearOpMode{
         IMU.Parameters imuParameters;
         imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(imuParameters);
+        rhWrist.setPosition(.35);
+        lhWrist.setPosition(0);
 
         waitForStart();
         imu.resetYaw();
@@ -115,6 +117,8 @@ public class TwoPlayerDrive extends LinearOpMode{
             if(gamepad2.dpad_left){
                 rhWrist.setPosition(.35);
                 lhWrist.setPosition(0);
+                clawSpinner.setPosition(.59);
+                spin = false;
             }
 
             if(karelNow.x && !karel.x){
