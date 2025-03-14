@@ -53,10 +53,10 @@ public class Lift extends SubsystemBase {
                 target = 1150;
                 break;
             case DOWN:
-                target = -5;
+                target = -2;
                 break;
             default:
-                target = 0;
+                target = -5;
                 break;
         }
     }
@@ -72,7 +72,7 @@ public class Lift extends SubsystemBase {
             return;
         } else if(target == -5){
             if(vSlide.getCurrentPosition() >= target){
-                vSlide.setPower(-.69);
+                vSlide.setPower(-.4);
                 return;
             }
             vSlide.setPower(0);
