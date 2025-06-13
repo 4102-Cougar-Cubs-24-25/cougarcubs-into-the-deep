@@ -1,4 +1,4 @@
-package sigmaCode.oldStuff.oldAutons;
+package sigmaCode.oldStuff.oldOpModes;
 
 import static java.lang.Math.abs;
 
@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Autonomous(name="Skibidi Specimen")
-public class karelAuton extends LinearOpMode {
+@Autonomous(name="Skibidi Right Park Specimen")
+public class izzyAuton extends LinearOpMode {
     private DcMotor rightFront; //rightFront is the right front wheel of the bot
     private DcMotor leftFront;
     private DcMotor rightBack;
@@ -89,6 +89,9 @@ public class karelAuton extends LinearOpMode {
         vSlidesDown(1000);
         reverse(1200, .5);
 
+        stopResetEncoders();
+        strafeRight(2000, .5);
+
     }
     public void vSlidesUp(int target){
         vSlide.setTargetPosition(target);
@@ -125,28 +128,6 @@ public class karelAuton extends LinearOpMode {
         rightBack.setPower(power);
         rightFront.setPower(-power);
         leftBack.setPower(-power);
-
-        while(leftFront.isBusy()){
-            telemetry.addData("strafing", "rizzy");
-            telemetry.update();
-        }
-
-        setSpeed(0);
-        setRunUsingEncoder();
-    }
-
-    public void strafeLeft(int target, double power){
-        leftFront.setTargetPosition(-target);
-        rightFront.setTargetPosition(target);
-        rightBack.setTargetPosition(-target);
-        leftBack.setTargetPosition(target);
-
-        setRunToPosition();
-
-        leftFront.setPower(-power);
-        rightBack.setPower(-power);
-        rightFront.setPower(power);
-        leftBack.setPower(power);
 
         while(leftFront.isBusy()){
             telemetry.addData("strafing", "rizzy");

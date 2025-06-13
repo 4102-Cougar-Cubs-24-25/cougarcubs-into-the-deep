@@ -1,5 +1,7 @@
-package org.firstinspires.ftc.teamcode.sigmaCode;
+package sigmaCode.oldStuff.oldOpModes;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,17 +10,19 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-@TeleOp(name="sigma sigma 0.1")
-public class AnotherTwoPlayerDrive extends LinearOpMode{
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+
+@TeleOp(name="hawk tuah teleop")
+public class PremierTeleOp extends LinearOpMode{
     //define motors and variables here
     private DcMotor rightFront, leftFront, rightBack, leftBack, vSlide, hSlide;
-    private Servo rhWrist, lhWrist, lvWrist, rvWrist, vClaw, hClaw, clawSpinner, sampleclaw;
+    private Servo rDiffy, lDiffy, lvArm, rvArm, vClaw, hClaw, vWrist, lhArm, rhArm;
     private IMU imu;
+    private Limelight3A limelight;
     private boolean hClawOpen = false;
     private boolean vClawOpen = false;
-    private boolean sampleclawOpen = false;
-    private boolean spin = false;
+    private boolean sampleMode = false;
+    private double sampleAngle, diffyTurn, clawAngle;
 
     public void runOpMode() throws InterruptedException {
 
@@ -28,15 +32,17 @@ public class AnotherTwoPlayerDrive extends LinearOpMode{
         leftBack = hardwareMap.dcMotor.get("leftBack");
         vSlide = hardwareMap.dcMotor.get("vSlide");
         hSlide = hardwareMap.dcMotor.get("hSlide");
-        lvWrist = hardwareMap.servo.get("lvWrist");
-        rvWrist = hardwareMap.servo.get("rvWrist");
-        lhWrist = hardwareMap.servo.get("lhWrist");
-        rhWrist = hardwareMap.servo.get("rhWrist");
+        imu = hardwareMap.get(IMU.class, "imu");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        rDiffy = hardwareMap.servo.get("rDiffy");
+        lDiffy = hardwareMap.servo.get("lDiffy");
+        lvArm = hardwareMap.servo.get("lvArm");
+        rvArm = hardwareMap.servo.get("rvArm");
         hClaw = hardwareMap.servo.get("hClaw");
         vClaw = hardwareMap.servo.get("vClaw");
-        sampleclaw = hardwareMap.servo.get("sClaw");
-        clawSpinner = hardwareMap.servo.get("clawSpinner");
-        imu = hardwareMap.get(IMU.class, "imu");
+        lhArm = hardwareMap.servo.get("lhArm");
+        rhArm = hardwareMap.servo.get("rhArm");
+        vWrist = hardwareMap.servo.get("vWrist");
 
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         leftFront.setDirection(DcMotor.Direction.FORWARD);
@@ -47,34 +53,54 @@ public class AnotherTwoPlayerDrive extends LinearOpMode{
         hSlide.setDirection(DcMotor.Direction.FORWARD);
 
         hSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telemetry.setMsTransmissionInterval(11);
+        limelight.setPollRateHz(100);
+        limelight.pipelineSwitch(0);
+        limelight.start();
 
         Gamepad karel = new Gamepad();
         Gamepad karelNow = new Gamepad();
-        Gamepad izzy = new Gamepad();
-        Gamepad izzyNow = new Gamepad();
 
         IMU.Parameters imuParameters;
         imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(imuParameters);
-        rhWrist.setPosition(.35);
-        lhWrist.setPosition(0);
 
         waitForStart();
+        lDiffy.setPosition(0.5);
+        rDiffy.setPosition(0.5);
         imu.resetYaw();
         while (opModeIsActive()) {
-
-            telemetry.addData("sigma (imu)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.addData("rizz (lf)", leftFront.getCurrentPosition());
-            telemetry.addData("aura (h)", hClawOpen);
-            telemetry.addData("fein (v)", vClaw.getPosition());
-            telemetry.addData("huzz (vs)", vSlide.getCurrentPosition());
-
+            LLResult result = limelight.getLatestResult();
+            double[] outputs = result.getPythonOutput();
+            telemetry.addData("Angle ", outputs[5]);
+            if (result != null) {
+                Pose3D botpose = result.getBotpose();
+                sampleAngle = outputs[5];
+                clawAngle = sampleAngle - 90;
+                diffyTurn = (((clawAngle / 2) * 1.5) / 355);
+                telemetry.addData("Angle: ", sampleAngle);
+                telemetry.addData("Turn", diffyTurn);
+                telemetry.addData("Valid", result.isValid());
+            }
             telemetry.update();
+
+            if(gamepad1.y) {
+                lDiffy.setPosition(0.7 + diffyTurn);
+                rDiffy.setPosition(0.3 + diffyTurn);
+            }
+
+            if(gamepad1.a){
+                lDiffy.setPosition(0.7);
+                rDiffy.setPosition(0.3);
+            }
+
+            if(gamepad1.b){
+                lDiffy.setPosition(0.5 + diffyTurn);
+                rDiffy.setPosition(0.5 + diffyTurn);
+            }
 
             karel.copy(karelNow);
             karelNow.copy(gamepad2);
-            izzy.copy(izzyNow);
-            izzyNow.copy(gamepad1);
 
             double y = -gamepad1.left_stick_x;
             double x = gamepad1.left_stick_y;
@@ -86,6 +112,10 @@ public class AnotherTwoPlayerDrive extends LinearOpMode{
             rightFront.setPower(Math.pow((y - x - (rx*.85)),5)/div);
             rightBack.setPower(Math.pow((y + x + (rx*.85)),5)/div);
 
+            if(gamepad1.b){
+                sampleMode = !sampleMode;
+            }
+
             if(gamepad2.right_trigger > 0){
                 vSlide.setPower(-0.9);
             } else if(gamepad2.right_bumper){
@@ -94,43 +124,51 @@ public class AnotherTwoPlayerDrive extends LinearOpMode{
                 vSlide.setPower(-0.1);
             }
 
-            if(gamepad1.left_bumper){
+            if(gamepad2.left_bumper){
                 hSlide.setPower(0.9);
-            } else if(gamepad1.left_trigger > 0){
+            } else if(gamepad2.left_trigger > 0){
                 hSlide.setPower(-0.6);
             } else {
                 hSlide.setPower(0);
             }
 
-            //all wrists and claws are normal (positional) servos
             if(gamepad2.dpad_down){
-                lvWrist.setPosition(0);
-                rvWrist.setPosition(.66);
+                if(!sampleMode) {
+                    lvArm.setPosition(1);
+                    rvArm.setPosition(.35);
+                } else {
+                    lvArm.setPosition(.6);
+                    rvArm.setPosition(.1);
+                }
             }
 
             if(gamepad2.dpad_up){
-                lvWrist.setPosition(.66);
-                rvWrist.setPosition(0);
+                if(!sampleMode) {
+                    lvArm.setPosition(.35);
+                    rvArm.setPosition(1);
+                } else {
+                    lvArm.setPosition(.1);
+                    rvArm.setPosition(.6);
+                }
             }
 
-            if(gamepad1.dpad_right){
-                rhWrist.setPosition(0);
-                lhWrist.setPosition(.35);
+            if(gamepad2.dpad_right){
+                rhArm.setPosition(0);
+                lhArm.setPosition(.197);
             }
 
-            if(gamepad1.dpad_left){
-                rhWrist.setPosition(.35);
-                lhWrist.setPosition(0);
-                clawSpinner.setPosition(.59);
-                spin = false;
+            if(gamepad2.dpad_left){
+                rhArm.setPosition(.197);
+                lhArm.setPosition(0);
             }
 
-            if(izzyNow.x && !izzy.x){
+            if(karelNow.x && !karel.x){
                 hClawOpen = !hClawOpen;
-
-                if(hClawOpen){
+            }
+            if(gamepad2.x) {
+                if (hClawOpen) {
                     hClaw.setPosition(0);
-                } else if(!hClawOpen){
+                } else {
                     hClaw.setPosition(.8);
                 }
             }
@@ -141,31 +179,19 @@ public class AnotherTwoPlayerDrive extends LinearOpMode{
             if(gamepad2.b) {
                 if (vClawOpen) {
                     vClaw.setPosition(.8);
-                } else if (!vClawOpen) {
+                } else {
                     vClaw.setPosition(0);
                 }
             }
 
-            if(karelNow.a && !karel.a){
-                sampleclawOpen = !sampleclawOpen;
+            if(gamepad2.a){
+                vWrist.setPosition(1);
             }
-            if(gamepad2.a) {
-                if (sampleclawOpen) {
-                    sampleclaw.setPosition(.8);
-                } else if (!sampleclawOpen) {
-                    sampleclaw.setPosition(0);
-                }
-            }
-            if(izzyNow.y && !izzy.y){
-                spin = !spin;
-            }
-            if(gamepad1.y){
-                if(spin){
-                    clawSpinner.setPosition(.92);
-                } else if(!spin){
-                    clawSpinner.setPosition(.59);
-                }
+
+            if(gamepad2.y){
+                vWrist.setPosition(.8);
             }
         }
+        limelight.stop();
     }
 }

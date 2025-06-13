@@ -36,6 +36,6 @@ public class Slides extends Subsystem {
     @NonNull
     @Override
     public Command getDefaultCommand(){
-        return new HoldPosition(lift, controller, this);
+        return new HoldPosition(verticalSlides, controller, this);
     }*/
 }

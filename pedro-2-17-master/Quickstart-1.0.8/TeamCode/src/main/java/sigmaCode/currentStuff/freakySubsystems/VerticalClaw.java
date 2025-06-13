@@ -1,16 +1,17 @@
 package sigmaCode.currentStuff.freakySubsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class LiftClaw extends SubsystemBase {
+@Config
+public class VerticalClaw extends SubsystemBase {
     private Servo vClaw;
     private clawState cs;
     public enum clawState{
         OPEN, CLOSE;
     }
-    public LiftClaw(Servo vClaw){
+    public VerticalClaw(Servo vClaw){
         this.vClaw = vClaw;
     }
     public void go(clawState state){

@@ -1,19 +1,19 @@
-package sigmaCode.oldStuff.oldAutons;
+package sigmaCode.oldStuff.oldOpModes;
 
 import static java.lang.Math.abs;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Autonomous(name="Skibidi Right Park 2-Specimen")
-public class kimchiAuton extends LinearOpMode {
+@Autonomous(name="Skibidi Specimen")
+public class karelAuton extends LinearOpMode {
     private DcMotor rightFront; //rightFront is the right front wheel of the bot
     private DcMotor leftFront;
     private DcMotor rightBack;
@@ -70,76 +70,25 @@ public class kimchiAuton extends LinearOpMode {
         imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(imuParameters);
 
-        //closing claw during initialization
         vClaw.setPosition(1);
 
         waitForStart();
         imu.resetYaw();
 
-        //vSlidesUp(1535);
+        vSlidesUp(1550);
         //wrist down
-        //lvWrist.setPosition(.25);
-        //rvWrist.setPosition(-1);
+        lvWrist.setPosition(.25);
+        rvWrist.setPosition(-1);
         forward(1200, .5);
         //claw open
-        //vClaw.setPosition(0);
+        vClaw.setPosition(0);
 
-        //1st specimen scored! (hopefully)
-
-        //vSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopResetEncoders();
-        //vSlidesDown(1000);
-        reverse(200, .5);
 
-        stopResetEncoders();
-        strafeRight(1300, .5);
+        vSlidesDown(1000);
+        reverse(1200, .5);
 
-        stopResetEncoders();
-        forward(1200, .5);
-
-        stopResetEncoders();
-        strafeRight(650, .5);
-
-        stopResetEncoders();
-        reverse(1700, .5);
-
-        //sample pushed into human player zone!
-
-        stopResetEncoders();
-        forward(400, .5);
-        turnRE(-170, .5);
-        //slidesDownMS(250);
-        stopResetEncoders();
-        forward(830, .5);
-        //vClaw.setPosition(1);
-
-        //specimen grabbed from wall!
-
-        sleep(750);
-        //vSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //vSlidesUp(1000);
-        stopResetEncoders();
-        reverse(500, .5);
-        stopResetEncoders();
-        strafeRight(2300, .5);
-        turnRE(0,.5);
-        //vSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //vSlidesUp(800);
-        stopResetEncoders();
-        forward(650, .5);
-
-        //2nd specimen scored! (hopefully)
-
-        stopResetEncoders();
-        reverse(750, .5);
-        turnLE(0, .5);
-        turnRE(0, .5);
-        stopResetEncoders();
-        strafeRight(2200, .5);
-
-        //robot is parked!
-
-        sleep(500);
     }
     public void vSlidesUp(int target){
         vSlide.setTargetPosition(target);
@@ -185,6 +134,28 @@ public class kimchiAuton extends LinearOpMode {
         setSpeed(0);
         setRunUsingEncoder();
     }
+
+    public void strafeLeft(int target, double power){
+        leftFront.setTargetPosition(-target);
+        rightFront.setTargetPosition(target);
+        rightBack.setTargetPosition(-target);
+        leftBack.setTargetPosition(target);
+
+        setRunToPosition();
+
+        leftFront.setPower(-power);
+        rightBack.setPower(-power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+
+        while(leftFront.isBusy()){
+            telemetry.addData("strafing", "rizzy");
+            telemetry.update();
+        }
+
+        setSpeed(0);
+        setRunUsingEncoder();
+    }
     public void reverse(int target, double speed) {
         target = -target;
         leftFront.setTargetPosition(target);
@@ -215,45 +186,11 @@ public class kimchiAuton extends LinearOpMode {
         setSpeed(0);
         setRunUsingEncoder();
     }
-    public void turnRE(int target, double speed) {
-        setRunWithoutEncoder();
-        leftFront.setPower(speed);
-        leftBack.setPower(speed);
-        rightFront.setPower(-speed);
-        rightBack.setPower(-speed);
-
-        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) > target){
-            telemetry.addData("turning right","sigma");
-            telemetry.update();
-        }
-        setSpeed(0);
-        setRunUsingEncoder();
-    }
-    public void turnLE(int target, double speed) {
-        setRunWithoutEncoder();
-        leftFront.setPower(-speed);
-        leftBack.setPower(-speed);
-        rightFront.setPower(speed);
-        rightBack.setPower(speed);
-
-        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) < target){
-            telemetry.addData("turning left","sigma");
-            telemetry.update();
-        }
-        setSpeed(0);
-        setRunUsingEncoder();
-    }
     public void setRunUsingEncoder(){
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void setRunWithoutEncoder(){
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void setSpeed(double speed) {
         leftFront.setPower(speed);
@@ -304,13 +241,12 @@ public class kimchiAuton extends LinearOpMode {
     }
     public void turnRPD(int angle) {
         globalAngle = angle;
-        double kd = .0065;
+        double kd = .0025;
         double kp = .0025;
         double minSpeed = .075;
         double error = angle - imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-        //+2 for 180
-        while (imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) > angle + 2) {
+        while (imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) > angle) {
             double prevErr = error;
             error = abs(angle - imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
             double d = error - prevErr;
@@ -331,10 +267,5 @@ public class kimchiAuton extends LinearOpMode {
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
-    }
-    public void slidesDownMS(int ms){
-        vSlide.setPower(-.2);
-        sleep(ms);
-        vSlide.setPower(0);
     }
 }

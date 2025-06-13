@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.sigmaCode;
+package sigmaCode.oldStuff.oldOpModes;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

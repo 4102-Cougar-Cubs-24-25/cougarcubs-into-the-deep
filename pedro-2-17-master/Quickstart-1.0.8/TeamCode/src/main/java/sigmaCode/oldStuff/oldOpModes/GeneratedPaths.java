@@ -1,4 +1,4 @@
-package sigmaCode.oldStuff.oldAutons;
+package sigmaCode.oldStuff.oldOpModes;
 
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
