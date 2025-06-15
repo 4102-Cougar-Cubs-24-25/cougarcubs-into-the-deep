@@ -3,6 +3,7 @@ import static sigmaCode.currentStuff.freakySubsystems.Diffy.diffyState.HANDOFF;
 import static sigmaCode.currentStuff.freakySubsystems.Diffy.diffyState.START;
 import static sigmaCode.currentStuff.freakySubsystems.Diffy.diffyState.TURN;
 import static sigmaCode.currentStuff.freakySubsystems.HorizontalArm.armState.DOWN;
+import static sigmaCode.currentStuff.freakySubsystems.HorizontalArm.armState.RETRACTED;
 import static sigmaCode.currentStuff.freakySubsystems.HorizontalArm.armState.UP;
 import static sigmaCode.currentStuff.freakySubsystems.HorizontalClaw.clawState.CLOSED;
 import static sigmaCode.currentStuff.freakySubsystems.HorizontalClaw.clawState.LOOSE;
@@ -31,6 +32,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import sigmaCode.currentStuff.feinCommands.ActivateLiftCommand;
 import sigmaCode.currentStuff.feinCommands.DiffyCommand;
 import sigmaCode.currentStuff.feinCommands.HorizontalArmCommand;
 import sigmaCode.currentStuff.feinCommands.HorizontalClawCommand;
@@ -76,6 +78,7 @@ public class HawkTuahGurtVersion extends LinearOpMode {
                new VerticalArmCommand(izzy.vertArm, RAMSPEC).schedule();
                new VerticalWristCommand(izzy.verticalWrist, SPECPLACE).schedule();
                new VerticalClawCommand(izzy.verticalClaw, CLOSE).schedule();
+               new HorizontalArmCommand(izzy.horiArm, RETRACTED).schedule();
                vClawOpen = false;
            } else {
                new VerticalArmCommand(izzy.vertArm, SAMPSCORE).schedule();
@@ -100,18 +103,18 @@ public class HawkTuahGurtVersion extends LinearOpMode {
         gp2.getGamepadButton(GamepadKeys.Button.X).whenPressed(() -> {
             hClawOpen = !hClawOpen;
             if(hClawOpen){
-                new HorizontalClawCommand(izzy.horiClaw, CLOSED).schedule();
+                new HorizontalClawCommand(izzy.horiClaw, OPENED).schedule();
             } else {
-               new HorizontalClawCommand(izzy.horiClaw, OPENED).schedule();
+               new HorizontalClawCommand(izzy.horiClaw, CLOSED).schedule();
            }
         });
 
         gp2.getGamepadButton(GamepadKeys.Button.B).whenPressed(() -> {
             vClawOpen = !vClawOpen;
             if(vClawOpen){
-                new VerticalClawCommand(izzy.verticalClaw, CLOSE).schedule();
-            } else {
                 new VerticalClawCommand(izzy.verticalClaw, OPEN).schedule();
+            } else {
+                new VerticalClawCommand(izzy.verticalClaw, CLOSE).schedule();
             }
         });
 
@@ -128,18 +131,18 @@ public class HawkTuahGurtVersion extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.BACK).whenPressed(() -> {
             new SequentialCommandGroup(
-                new VerticalArmCommand(izzy.vertArm, MIDTRANSFER),
-                new HorizontalArmCommand(izzy.horiArm, UP),
-                new VerticalClawCommand(izzy.verticalClaw, OPEN),
-                new DiffyCommand(izzy.diffy, HANDOFF),
-                new HorizontalClawCommand(izzy.horiClaw, LOOSE),
-                new WaitCommand(300),
-                new VerticalArmCommand(izzy.vertArm, TRANSFER),
-                new VerticalWristCommand(izzy.verticalWrist, NORMAL),
-                new WaitCommand(300),
-                new VerticalClawCommand(izzy.verticalClaw, CLOSE),
-                new WaitCommand(150),
-                new HorizontalClawCommand(izzy.horiClaw, OPENED)
+                    new VerticalArmCommand(izzy.vertArm, MIDTRANSFER),
+                    new HorizontalArmCommand(izzy.horiArm, UP),
+                    new VerticalClawCommand(izzy.verticalClaw, OPEN),
+                    new DiffyCommand(izzy.diffy, HANDOFF),
+                    new HorizontalClawCommand(izzy.horiClaw, LOOSE),
+                    new WaitCommand(300),
+                    new VerticalArmCommand(izzy.vertArm, TRANSFER),
+                    new VerticalWristCommand(izzy.verticalWrist, NORMAL),
+                    new WaitCommand(300),
+                    new VerticalClawCommand(izzy.verticalClaw, CLOSE),
+                    new WaitCommand(150),
+                    new HorizontalClawCommand(izzy.horiClaw, OPENED)
             ).schedule();
             vClawOpen = false;
             hClawOpen = true;
@@ -159,6 +162,7 @@ public class HawkTuahGurtVersion extends LinearOpMode {
 
         while(!isStopRequested() && opModeIsActive()){
             TelemetryUtil.addData("sample mode", sampleMode);
+            TelemetryUtil.addData("sample angle", izzy.diffy.getAngle());
             double y = -gamepad1.left_stick_x;
             double x = gamepad1.left_stick_y;
             double rx = gamepad1.right_stick_x;
@@ -170,9 +174,9 @@ public class HawkTuahGurtVersion extends LinearOpMode {
             izzy.rightBack.setPower(Math.pow((y + x + (rx*.85)),5)/div);
 
             if(gamepad2.right_trigger > 0){
-                izzy.vSlide.setPower(-0.9);
+                izzy.vSlide.setPower(-1);
             } else if(gamepad2.right_bumper){
-                izzy.vSlide.setPower(0.7);
+                izzy.vSlide.setPower(0.5);
             } else {
                 izzy.vSlide.setPower(-0.1);
             }

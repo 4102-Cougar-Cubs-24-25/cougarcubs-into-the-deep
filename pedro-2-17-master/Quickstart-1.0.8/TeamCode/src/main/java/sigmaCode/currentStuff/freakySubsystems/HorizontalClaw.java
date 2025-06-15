@@ -21,7 +21,7 @@ public class HorizontalClaw extends SubsystemBase {
                 hClaw.setPosition(0);
                 break;
             case CLOSED:
-                hClaw.setPosition(0.8);
+                hClaw.setPosition(0.5);
                 break;
             case LOOSE:
                 hClaw.setPosition(0.25);

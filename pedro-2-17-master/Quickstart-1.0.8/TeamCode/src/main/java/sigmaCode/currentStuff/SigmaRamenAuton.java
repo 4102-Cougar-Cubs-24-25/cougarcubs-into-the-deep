@@ -8,6 +8,7 @@ import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.SPECW
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.CLOSE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.OPEN;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.DOWN;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.FIRSTSPEC;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.MIDDLE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.RESET;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.SPECUP;
@@ -58,8 +59,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 1
                         new BezierLine(
-                                new Point(7.200, 65.000, Point.CARTESIAN),
-                                new Point(38.500, 65.000, Point.CARTESIAN)
+                                new Point(7.200, 63.000, Point.CARTESIAN),
+                                new Point(37.500, 72.500, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -69,7 +70,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(39.500, 65.000, Point.CARTESIAN),
+                                new Point(38.500, 72.500, Point.CARTESIAN),
                                 new Point(-5, 36, Point.CARTESIAN),
                                 new Point(65.0322, 38.3225, Point.CARTESIAN),
                                 new Point(80.1161, 15.529, Point.CARTESIAN),
@@ -172,7 +173,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(8, 33.000, Point.CARTESIAN),
                                 new Point(10, 66.000, Point.CARTESIAN),
-                                new Point(39, 68.500, Point.CARTESIAN)
+                                new Point(39, 68.00, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -181,7 +182,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 12
                         new BezierLine(
-                                new Point(39, 68.500, Point.CARTESIAN),
+                                new Point(39, 68.00, Point.CARTESIAN),
                                 new Point(8, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -194,7 +195,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         // Line 13
                         new BezierLine(
                                 new Point(8, 33.000, Point.CARTESIAN),
-                                new Point(39, 67.000, Point.CARTESIAN)
+                                new Point(39, 66.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -203,7 +204,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 14
                         new BezierLine(
-                                new Point(39, 67.000, Point.CARTESIAN),
+                                new Point(39, 66.000, Point.CARTESIAN),
                                 new Point(8, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -216,7 +217,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         // Line 15
                         new BezierLine(
                                 new Point(8, 33.000, Point.CARTESIAN),
-                                new Point(39, 72.500, Point.CARTESIAN)
+                                new Point(39, 65.00, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -225,7 +226,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 16
                         new BezierLine(
-                                new Point(39, 72.500, Point.CARTESIAN),
+                                new Point(39, 65.00, Point.CARTESIAN),
                                 new Point(9.000, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -241,7 +242,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 new SequentialCommandGroup(
                         new ActivateLiftCommand(izzy),
                         new ParallelCommandGroup(
-                                new VerticalSlidesCommand(izzy, MIDDLE),
+                                new VerticalSlidesCommand(izzy, FIRSTSPEC),
                                 new FollowPathCommand(izzy.follower, line1)
                         ),
                         new VerticalSlidesCommand(izzy, SPECUP),
@@ -421,7 +422,8 @@ public class SigmaRamenAuton extends LinearOpMode {
                             new DiffyCommand(izzy.diffy, START),
                             new VerticalArmCommand(izzy.vertArm, SPECSCORE),
                             new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC),
-                            new VerticalClawCommand(izzy.verticalClaw, CLOSE)
+                            new VerticalClawCommand(izzy.verticalClaw, CLOSE),
+                            new VerticalSlidesCommand(izzy, RESET)
                     )
                 )
         );

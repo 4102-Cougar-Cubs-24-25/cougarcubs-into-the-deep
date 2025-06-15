@@ -11,6 +11,7 @@ public class Diffy extends SubsystemBase {
     private Servo lDiffy, rDiffy;
     private Limelight3A limelight;
     private diffyState ds;
+    private double sampleAngle;
     public enum diffyState{
         START, TURN, HANDOFF, SAMPLE, THIRD;
     }
@@ -28,9 +29,6 @@ public class Diffy extends SubsystemBase {
                 lDiffy.setPosition(.45);
                 break;
             case TURN:
-                LLResult result = limelight.getLatestResult();
-                double[] outputs = result.getPythonOutput();
-                double sampleAngle = outputs[5];
                 double clawAngle = sampleAngle - 90;
                 double diffyTurn = (((clawAngle / 2) * 1.5) / 355);
                 lDiffy.setPosition(0.3 + diffyTurn);
@@ -50,6 +48,13 @@ public class Diffy extends SubsystemBase {
                 rDiffy.setPosition(0.7 + turn);
                 break;
         }
-
+    }
+    public double getAngle(){
+        return sampleAngle;
+    }
+    public void periodic(){
+        LLResult result = limelight.getLatestResult();
+        double[] outputs = result.getPythonOutput();
+        sampleAngle = outputs[5];
     }
 }

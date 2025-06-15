@@ -68,7 +68,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(7.665, 112.413, Point.CARTESIAN),
                                 new Point(29.961, 113.342, Point.CARTESIAN),
-                                new Point(12.006, 132, Point.CARTESIAN)
+                                new Point(12.006, 131, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
@@ -78,7 +78,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line2 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                new Point(13.006, 132, Point.CARTESIAN),
+                                new Point(12.006, 131, Point.CARTESIAN),
                                 new Point(32.752, 121.403, Point.CARTESIAN)
                         )
                 )
@@ -90,7 +90,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                 .addPath(
                         new BezierLine(
                                 new Point(32.052, 121.703, Point.CARTESIAN),
-                                new Point(12.006, 132, Point.CARTESIAN)
+                                new Point(12.006, 131, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
@@ -112,7 +112,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                 .addPath(
                         new BezierLine(
                                 new Point(32.748, 131.226, Point.CARTESIAN),
-                                new Point(12.006, 132, Point.CARTESIAN)
+                                new Point(12.006, 131, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
@@ -122,7 +122,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line6 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Point(13.006, 132, Point.CARTESIAN),
+                                new Point(12.006, 131, Point.CARTESIAN),
                                 new Point(35.535, 120.774, Point.CARTESIAN),
                                 new Point(45.755, 128.1, Point.CARTESIAN)
                         )
@@ -136,7 +136,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(45.755, 128.1, Point.CARTESIAN),
                                 new Point(35.768, 120.542, Point.CARTESIAN),
-                                new Point(13.006, 132, Point.CARTESIAN)
+                                new Point(12.006, 131, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(-45))
@@ -146,7 +146,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line8 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Point(13.006, 132, Point.CARTESIAN),
+                                new Point(12.006, 131, Point.CARTESIAN),
                                 new Point(64.103, 113.342, Point.CARTESIAN),
                                 new Point(60.852, 95.690, Point.CARTESIAN)
                         )
@@ -172,7 +172,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                                 new FollowPathCommand(izzy.follower, line1)
                         ),
                         //at bucket
-                        new WaitCommand(500),
+                        new WaitCommand(750),
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         //1st sample scored
                         new WaitCommand(150),
@@ -213,7 +213,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                                 new FollowPathCommand(izzy.follower, line3)
                         ),
                         //at bucket
-                        new WaitCommand(500),
+                        new WaitCommand(750),
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         //2nd sample scored
                         new WaitCommand(150),
@@ -254,7 +254,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                                 new FollowPathCommand(izzy.follower, line5)
                         ),
                         //at bucket
-                        new WaitCommand(500),
+                        new WaitCommand(750),
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         //3rd sample scored
                         new WaitCommand(150),
@@ -296,7 +296,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                                 new FollowPathCommand(izzy.follower, line7)
                         ),
                         //at bucket
-                        new WaitCommand(500),
+                        new WaitCommand(750),
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         //4th sample scored
                         new WaitCommand(150),

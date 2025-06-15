@@ -21,8 +21,8 @@ public class VerticalArm extends SubsystemBase {
         as = state;
         switch(as){
             case SPECWALL:
-                lvArm.setPosition(0.04);
-                rvArm.setPosition(0.04);
+                lvArm.setPosition(0.06);
+                rvArm.setPosition(0.06);
                 break;
             case TRANSFER:
                 lvArm.setPosition(.71);

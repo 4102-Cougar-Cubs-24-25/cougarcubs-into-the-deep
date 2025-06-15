@@ -21,7 +21,7 @@ public class VerticalClaw extends SubsystemBase {
                 vClaw.setPosition(0);
                 break;
             case CLOSE:
-                vClaw.setPosition(0.8);
+                vClaw.setPosition(0.5);
                 break;
         }
     }
