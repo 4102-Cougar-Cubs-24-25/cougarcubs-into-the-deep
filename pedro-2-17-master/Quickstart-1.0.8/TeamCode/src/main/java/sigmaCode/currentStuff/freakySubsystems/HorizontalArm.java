@@ -21,8 +21,8 @@ public class HorizontalArm extends SubsystemBase {
         as = state;
         switch(as){
             case DOWN:
-                rhArm.setPosition(.805);
-                lhArm.setPosition(.805);
+                rhArm.setPosition(.81);
+                lhArm.setPosition(.81);
                 break;
             case UP:
                 rhArm.setPosition(.7275);

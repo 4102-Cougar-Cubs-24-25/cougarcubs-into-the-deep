@@ -17,8 +17,11 @@ import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.TRANS
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.CLOSE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.OPEN;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.DOWN;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.MIDDLE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.SAMPUP;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.AUTOSPEC;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.NORMAL;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.SAMPDROP;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.SPECPLACE;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -65,7 +68,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(7.665, 112.413, Point.CARTESIAN),
                                 new Point(29.961, 113.342, Point.CARTESIAN),
-                                new Point(12.006, 132.690, Point.CARTESIAN)
+                                new Point(12.006, 132, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
@@ -75,7 +78,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line2 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                new Point(13.006, 131.690, Point.CARTESIAN),
+                                new Point(13.006, 132, Point.CARTESIAN),
                                 new Point(32.752, 121.403, Point.CARTESIAN)
                         )
                 )
@@ -87,7 +90,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                 .addPath(
                         new BezierLine(
                                 new Point(32.052, 121.703, Point.CARTESIAN),
-                                new Point(12.006, 132.458, Point.CARTESIAN)
+                                new Point(12.006, 132, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
@@ -97,7 +100,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line4 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                new Point(13.006, 131.458, Point.CARTESIAN),
+                                new Point(12.006, 132, Point.CARTESIAN),
                                 new Point(32.748, 131.226, Point.CARTESIAN)
                         )
                 )
@@ -109,7 +112,7 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                 .addPath(
                         new BezierLine(
                                 new Point(32.748, 131.226, Point.CARTESIAN),
-                                new Point(12.006, 132.690, Point.CARTESIAN)
+                                new Point(12.006, 132, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
@@ -119,9 +122,9 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line6 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Point(13.006, 131.690, Point.CARTESIAN),
+                                new Point(13.006, 132, Point.CARTESIAN),
                                 new Point(35.535, 120.774, Point.CARTESIAN),
-                                new Point(45.755, 127.761, Point.CARTESIAN)
+                                new Point(45.755, 128.1, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(90))
@@ -131,9 +134,9 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line7 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Point(45.755, 127.761, Point.CARTESIAN),
+                                new Point(45.755, 128.1, Point.CARTESIAN),
                                 new Point(35.768, 120.542, Point.CARTESIAN),
-                                new Point(13.006, 131.690, Point.CARTESIAN)
+                                new Point(13.006, 132, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(-45))
@@ -143,13 +146,13 @@ public class TralaleroTralalaAuton extends LinearOpMode {
         line8 = izzy.follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Point(13.006, 131.690, Point.CARTESIAN),
+                                new Point(13.006, 132, Point.CARTESIAN),
                                 new Point(64.103, 113.342, Point.CARTESIAN),
                                 new Point(60.852, 95.690, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(3.75)
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
     }
     public void scheduleAuto(){
@@ -161,9 +164,10 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new ParallelCommandGroup(
                                 new ActivateLiftCommand(izzy),
                                 new VerticalSlidesCommand(izzy, SAMPUP),
+                                new VerticalWristCommand(izzy.verticalWrist, SAMPDROP),
                                 new SequentialCommandGroup(
-                                    new WaitCommand(1250),
-                                     new VerticalArmCommand(izzy.vertArm, SAMPSCORE)
+                                        new WaitCommand(1300),
+                                        new VerticalArmCommand(izzy.vertArm, SAMPSCORE)
                                 ),
                                 new FollowPathCommand(izzy.follower, line1)
                         ),
@@ -201,8 +205,9 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new ParallelCommandGroup(
                                 new ActivateLiftCommand(izzy),
                                 new VerticalSlidesCommand(izzy, SAMPUP),
+                                new VerticalWristCommand(izzy.verticalWrist, SAMPDROP),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(1250),
+                                        new WaitCommand(1300),
                                         new VerticalArmCommand(izzy.vertArm, SAMPSCORE)
                                 ),
                                 new FollowPathCommand(izzy.follower, line3)
@@ -241,8 +246,9 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new ParallelCommandGroup(
                                 new ActivateLiftCommand(izzy),
                                 new VerticalSlidesCommand(izzy, SAMPUP),
+                                new VerticalWristCommand(izzy.verticalWrist, SAMPDROP),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(1250),
+                                        new WaitCommand(1300),
                                         new VerticalArmCommand(izzy.vertArm, SAMPSCORE)
                                 ),
                                 new FollowPathCommand(izzy.follower, line5)
@@ -262,28 +268,29 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new DiffyCommand(izzy.diffy, THIRD),
                         new WaitCommand(350),
                         new HorizontalArmCommand(izzy.horiArm, HorizontalArm.armState.DOWN),
-                        new WaitCommand(200),
+                        new WaitCommand(500),
                         new HorizontalClawCommand(izzy.horiClaw, CLOSED),
                         //4th sample picked up
                         new WaitCommand(300),
-                        new HorizontalArmCommand(izzy.horiArm, UP),
-                        new VerticalClawCommand(izzy.verticalClaw, OPEN),
-                        new WaitCommand(300),
-                        new DiffyCommand(izzy.diffy, HANDOFF),
-                        new HorizontalClawCommand(izzy.horiClaw, LOOSE),
-                        new WaitCommand(300),
-                        new VerticalArmCommand(izzy.vertArm, TRANSFER),
-                        new VerticalWristCommand(izzy.verticalWrist, NORMAL),
-                        new WaitCommand(750),
-                        new VerticalClawCommand(izzy.verticalClaw, CLOSE),
-                        new WaitCommand(150),
-                        new HorizontalClawCommand(izzy.horiClaw, OPENED),
-                        //4th sample transferred
                         new ParallelCommandGroup(
-                                new ActivateLiftCommand(izzy),
-                                new VerticalSlidesCommand(izzy, SAMPUP),
                                 new SequentialCommandGroup(
-                                        new WaitCommand(1250),
+                                        new HorizontalArmCommand(izzy.horiArm, UP),
+                                        new VerticalClawCommand(izzy.verticalClaw, OPEN),
+                                        new WaitCommand(300),
+                                        new DiffyCommand(izzy.diffy, HANDOFF),
+                                        new HorizontalClawCommand(izzy.horiClaw, LOOSE),
+                                        new WaitCommand(300),
+                                        new VerticalArmCommand(izzy.vertArm, TRANSFER),
+                                        new VerticalWristCommand(izzy.verticalWrist, NORMAL),
+                                        new WaitCommand(750),
+                                        new VerticalClawCommand(izzy.verticalClaw, CLOSE),
+                                        new WaitCommand(150),
+                                        new HorizontalClawCommand(izzy.horiClaw, OPENED),
+                                        //4th sample transferred
+                                        new ActivateLiftCommand(izzy),
+                                        new VerticalSlidesCommand(izzy, SAMPUP),
+                                        new WaitCommand(1300),
+                                        new VerticalWristCommand(izzy.verticalWrist, SAMPDROP),
                                         new VerticalArmCommand(izzy.vertArm, SAMPSCORE)
                                 ),
                                 new FollowPathCommand(izzy.follower, line7)
@@ -295,8 +302,8 @@ public class TralaleroTralalaAuton extends LinearOpMode {
                         new WaitCommand(150),
                         new ParallelCommandGroup(
                                 new FollowPathCommand(izzy.follower, line8),
-                                new VerticalArmCommand(izzy.vertArm, MIDTRANSFER),
-                                new VerticalSlidesCommand(izzy, DOWN)
+                                new VerticalArmCommand(izzy.vertArm, SPECSCORE),
+                                new VerticalSlidesCommand(izzy, MIDDLE)
                         )
                         //at bar
                 ));

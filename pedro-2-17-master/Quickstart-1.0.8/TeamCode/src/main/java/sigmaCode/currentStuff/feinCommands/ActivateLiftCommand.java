@@ -1,5 +1,7 @@
 package sigmaCode.currentStuff.feinCommands;
 
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.RESET;
+
 import com.arcrobotics.ftclib.command.InstantCommand;
 
 import sigmaCode.currentStuff.freakySubsystems.IzzyV2;

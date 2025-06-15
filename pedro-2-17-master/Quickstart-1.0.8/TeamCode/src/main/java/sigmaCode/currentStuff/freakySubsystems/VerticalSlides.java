@@ -16,7 +16,7 @@ public class VerticalSlides extends SubsystemBase {
     private final double ticks_in_degrees = 700 / 180.0;
     private boolean teleOp;
     public enum liftState{
-        SPECUP, DOWN, SAMPUP, RESET;
+        SPECUP, DOWN, SAMPUP, RESET, MIDDLE;
     }
     public int getTarget(){
         return target;
@@ -39,13 +39,16 @@ public class VerticalSlides extends SubsystemBase {
     public void setTarget(liftState state){
         switch (state){
             case SPECUP:
-                target = -675;
+                target = -900;
+                break;
+            case MIDDLE:
+                target = -430;
                 break;
             case DOWN:
                 target = 0;
                 break;
             case SAMPUP:
-                target = -1800;
+                target = -1850;
                 break;
             case RESET:
                 vSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

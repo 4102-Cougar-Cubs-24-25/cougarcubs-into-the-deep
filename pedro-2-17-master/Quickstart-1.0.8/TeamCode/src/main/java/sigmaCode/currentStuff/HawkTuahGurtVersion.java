@@ -8,15 +8,19 @@ import static sigmaCode.currentStuff.freakySubsystems.HorizontalClaw.clawState.C
 import static sigmaCode.currentStuff.freakySubsystems.HorizontalClaw.clawState.LOOSE;
 import static sigmaCode.currentStuff.freakySubsystems.HorizontalClaw.clawState.OPENED;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.MIDTRANSFER;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.RAMSPEC;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.SAMPSCORE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.SPECSCORE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.SPECWALL;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.TRANSFER;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.CLOSE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.OPEN;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.SPECUP;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.AUTOSPEC;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.NORMAL;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.SAMPDROP;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.SPECPLACE;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.SAMPUP;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -62,24 +66,30 @@ public class HawkTuahGurtVersion extends LinearOpMode {
                 new VerticalClawCommand(izzy.verticalClaw, OPEN).schedule();
                 vClawOpen = true;
             } else {
-                new VerticalArmCommand(izzy.vertArm, TRANSFER).schedule();
+                new VerticalArmCommand(izzy.vertArm, MIDTRANSFER).schedule();
                 new VerticalWristCommand(izzy.verticalWrist, NORMAL).schedule();
             }
         });
 
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
            if(!sampleMode){
-               new VerticalArmCommand(izzy.vertArm, SPECSCORE).schedule();
+               new VerticalArmCommand(izzy.vertArm, RAMSPEC).schedule();
                new VerticalWristCommand(izzy.verticalWrist, SPECPLACE).schedule();
                new VerticalClawCommand(izzy.verticalClaw, CLOSE).schedule();
                vClawOpen = false;
            } else {
                new VerticalArmCommand(izzy.vertArm, SAMPSCORE).schedule();
+               new VerticalWristCommand(izzy.verticalWrist, SAMPDROP).schedule();
            }
         });
 
         gp1.getGamepadButton(GamepadKeys.Button.B).whenPressed(() -> {
             sampleMode = !sampleMode;
+            if(sampleMode) {
+                izzy.limelight.pipelineSwitch(2);
+            } else {
+                izzy.limelight.pipelineSwitch(0);
+            }
         });
 
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
@@ -105,7 +115,10 @@ public class HawkTuahGurtVersion extends LinearOpMode {
             }
         });
 
-        gp2.getGamepadButton(GamepadKeys.Button.A).whenPressed(new VerticalArmCommand(izzy.vertArm, SAMPSCORE));
+        gp2.getGamepadButton(GamepadKeys.Button.A).whenPressed(new SequentialCommandGroup(
+                new VerticalArmCommand(izzy.vertArm,SPECSCORE),
+                new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC)
+                ));
 
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(new SequentialCommandGroup(
                 new DiffyCommand(izzy.diffy, TURN),
@@ -118,7 +131,6 @@ public class HawkTuahGurtVersion extends LinearOpMode {
                 new VerticalArmCommand(izzy.vertArm, MIDTRANSFER),
                 new HorizontalArmCommand(izzy.horiArm, UP),
                 new VerticalClawCommand(izzy.verticalClaw, OPEN),
-                new WaitCommand(300),
                 new DiffyCommand(izzy.diffy, HANDOFF),
                 new HorizontalClawCommand(izzy.horiClaw, LOOSE),
                 new WaitCommand(300),

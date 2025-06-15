@@ -8,7 +8,10 @@ import static sigmaCode.currentStuff.freakySubsystems.VerticalArm.armState.SPECW
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.CLOSE;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalClaw.clawState.OPEN;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.DOWN;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.MIDDLE;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.RESET;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalSlides.liftState.SPECUP;
+import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.AUTOSPEC;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.NORMAL;
 import static sigmaCode.currentStuff.freakySubsystems.VerticalWrist.wristState.SPECPLACE;
 
@@ -56,7 +59,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         // Line 1
                         new BezierLine(
                                 new Point(7.200, 65.000, Point.CARTESIAN),
-                                new Point(42.500, 65.000, Point.CARTESIAN)
+                                new Point(38.500, 65.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -66,7 +69,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(42.500, 65.000, Point.CARTESIAN),
+                                new Point(39.500, 65.000, Point.CARTESIAN),
                                 new Point(-5, 36, Point.CARTESIAN),
                                 new Point(65.0322, 38.3225, Point.CARTESIAN),
                                 new Point(80.1161, 15.529, Point.CARTESIAN),
@@ -146,7 +149,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(8, 33.000, Point.CARTESIAN),
                                 new Point(10, 66.000, Point.CARTESIAN),
-                                new Point(42, 68.000, Point.CARTESIAN)
+                                new Point(39, 70.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -154,9 +157,8 @@ public class SigmaRamenAuton extends LinearOpMode {
         line10 = izzy.follower.pathBuilder()
                 .addPath(
                         // Line 10
-                        new BezierCurve(
-                                new Point(42, 66.000, Point.CARTESIAN),
-                                new Point(10, 66.000, Point.CARTESIAN),
+                        new BezierLine(
+                                new Point(39, 70.000, Point.CARTESIAN),
                                 new Point(8, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -170,7 +172,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         new BezierCurve(
                                 new Point(8, 33.000, Point.CARTESIAN),
                                 new Point(10, 66.000, Point.CARTESIAN),
-                                new Point(42, 65.500, Point.CARTESIAN)
+                                new Point(39, 68.500, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -179,7 +181,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 12
                         new BezierLine(
-                                new Point(42, 65.500, Point.CARTESIAN),
+                                new Point(39, 68.500, Point.CARTESIAN),
                                 new Point(8, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -192,7 +194,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         // Line 13
                         new BezierLine(
                                 new Point(8, 33.000, Point.CARTESIAN),
-                                new Point(42, 65.000, Point.CARTESIAN)
+                                new Point(39, 67.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -201,7 +203,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 14
                         new BezierLine(
-                                new Point(42, 65.000, Point.CARTESIAN),
+                                new Point(39, 67.000, Point.CARTESIAN),
                                 new Point(8, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -214,7 +216,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                         // Line 15
                         new BezierLine(
                                 new Point(8, 33.000, Point.CARTESIAN),
-                                new Point(42, 64.500, Point.CARTESIAN)
+                                new Point(39, 72.500, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -223,7 +225,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                 .addPath(
                         // Line 16
                         new BezierLine(
-                                new Point(42, 64.500, Point.CARTESIAN),
+                                new Point(39, 72.500, Point.CARTESIAN),
                                 new Point(9.000, 33.000, Point.CARTESIAN)
                         )
                 )
@@ -239,16 +241,19 @@ public class SigmaRamenAuton extends LinearOpMode {
                 new SequentialCommandGroup(
                         new ActivateLiftCommand(izzy),
                         new ParallelCommandGroup(
-                                new VerticalSlidesCommand(izzy, SPECUP),
+                                new VerticalSlidesCommand(izzy, MIDDLE),
                                 new FollowPathCommand(izzy.follower, line1)
                         ),
+                        new VerticalSlidesCommand(izzy, SPECUP),
                         new WaitCommand(320),
                         //1st spec scored
-                        new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         new ParallelCommandGroup(
+                                new VerticalClawCommand(izzy.verticalClaw, OPEN),
                                 new SequentialCommandGroup(
                                         new WaitCommand(150),
-                                        new VerticalSlidesCommand(izzy, DOWN)
+                                        new VerticalSlidesCommand(izzy, DOWN),
+                                        new WaitCommand(1700),
+                                        new ActivateLiftCommand(izzy)
                                 ),
                                 new VerticalWristCommand(izzy.verticalWrist, NORMAL),
                                 new VerticalArmCommand(izzy.vertArm, SPECWALL),
@@ -271,17 +276,20 @@ public class SigmaRamenAuton extends LinearOpMode {
                                 new SequentialCommandGroup(
                                         new WaitCommand(150),
                                         new VerticalArmCommand(izzy.vertArm, SPECSCORE),
-                                        new VerticalWristCommand(izzy.verticalWrist, SPECPLACE)
+                                        new VerticalSlidesCommand(izzy, RESET),
+                                        new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(50),
+                                        new ActivateLiftCommand(izzy),
                                         new ParallelCommandGroup(
-                                            new VerticalSlidesCommand(izzy, SPECUP),
+                                            new VerticalSlidesCommand(izzy, MIDDLE),
                                             new FollowPathCommand(izzy.follower, line9)
                                         )
                                 )
                         ),
-                        new WaitCommand(100),
+                        new VerticalSlidesCommand(izzy, SPECUP),
+                        new WaitCommand(300),
                         //2nd spec scored
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         new ParallelCommandGroup(
@@ -304,17 +312,19 @@ public class SigmaRamenAuton extends LinearOpMode {
                                 new SequentialCommandGroup(
                                         new WaitCommand(150),
                                         new VerticalArmCommand(izzy.vertArm, SPECSCORE),
-                                        new VerticalWristCommand(izzy.verticalWrist, SPECPLACE)
+                                        new VerticalSlidesCommand(izzy, RESET),
+                                        new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(50),
                                         new ParallelCommandGroup(
-                                                new VerticalSlidesCommand(izzy, SPECUP),
+                                                new VerticalSlidesCommand(izzy, MIDDLE),
                                                 new FollowPathCommand(izzy.follower, line11)
                                         )
                                 )
                         ),
-                        new WaitCommand(310),
+                        new VerticalSlidesCommand(izzy, SPECUP),
+                        new WaitCommand(300),
                         //3rd spec scored
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         new ParallelCommandGroup(
@@ -337,17 +347,19 @@ public class SigmaRamenAuton extends LinearOpMode {
                                 new SequentialCommandGroup(
                                         new WaitCommand(150),
                                         new VerticalArmCommand(izzy.vertArm, SPECSCORE),
-                                        new VerticalWristCommand(izzy.verticalWrist, SPECPLACE)
+                                        new VerticalSlidesCommand(izzy, RESET),
+                                        new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(50),
                                         new ParallelCommandGroup(
-                                                new VerticalSlidesCommand(izzy, SPECUP),
+                                                new VerticalSlidesCommand(izzy, MIDDLE),
                                                 new FollowPathCommand(izzy.follower, line13)
                                         )
                                 )
                         ),
-                        new WaitCommand(310),
+                        new VerticalSlidesCommand(izzy, SPECUP),
+                        new WaitCommand(300),
                         //4th spec scored
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         new ParallelCommandGroup(
@@ -370,17 +382,19 @@ public class SigmaRamenAuton extends LinearOpMode {
                                 new SequentialCommandGroup(
                                         new WaitCommand(150),
                                         new VerticalArmCommand(izzy.vertArm, SPECSCORE),
-                                        new VerticalWristCommand(izzy.verticalWrist, SPECPLACE)
+                                        new VerticalSlidesCommand(izzy, RESET),
+                                        new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(50),
                                         new ParallelCommandGroup(
-                                                new VerticalSlidesCommand(izzy, SPECUP),
+                                                new VerticalSlidesCommand(izzy, MIDDLE),
                                                 new FollowPathCommand(izzy.follower, line15)
                                         )
                                 )
                         ),
-                        new WaitCommand(310),
+                        new VerticalSlidesCommand(izzy, SPECUP),
+                        new WaitCommand(300),
                         //5th spec scored
                         new VerticalClawCommand(izzy.verticalClaw, OPEN),
                         new ParallelCommandGroup(
@@ -406,7 +420,7 @@ public class SigmaRamenAuton extends LinearOpMode {
                             new HorizontalArmCommand(izzy.horiArm, RETRACTED),
                             new DiffyCommand(izzy.diffy, START),
                             new VerticalArmCommand(izzy.vertArm, SPECSCORE),
-                            new VerticalWristCommand(izzy.verticalWrist, SPECPLACE),
+                            new VerticalWristCommand(izzy.verticalWrist, AUTOSPEC),
                             new VerticalClawCommand(izzy.verticalClaw, CLOSE)
                     )
                 )

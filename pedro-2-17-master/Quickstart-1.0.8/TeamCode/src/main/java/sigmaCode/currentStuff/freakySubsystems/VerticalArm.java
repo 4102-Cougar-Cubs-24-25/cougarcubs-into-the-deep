@@ -9,7 +9,7 @@ public class VerticalArm extends SubsystemBase {
     private Servo lvArm, rvArm;
     private armState as;
     public enum armState{
-        SPECWALL, TRANSFER, SPECSCORE, SAMPSCORE, MIDTRANSFER;
+        SPECWALL, TRANSFER, SPECSCORE, SAMPSCORE, MIDTRANSFER, RAMSPEC;
     }
 
     public VerticalArm(Servo lvArm, Servo rvArm){
@@ -21,16 +21,16 @@ public class VerticalArm extends SubsystemBase {
         as = state;
         switch(as){
             case SPECWALL:
-                lvArm.setPosition(0.03);
-                rvArm.setPosition(0.03);
+                lvArm.setPosition(0.04);
+                rvArm.setPosition(0.04);
                 break;
             case TRANSFER:
-                lvArm.setPosition(.7);
-                rvArm.setPosition(.7);
+                lvArm.setPosition(.71);
+                rvArm.setPosition(.71);
                 break;
             case SAMPSCORE:
-                lvArm.setPosition(.1);
-                rvArm.setPosition(.1);
+                lvArm.setPosition(.18);
+                rvArm.setPosition(.18);
                 break;
             case SPECSCORE:
                 lvArm.setPosition(.62);
@@ -39,6 +39,10 @@ public class VerticalArm extends SubsystemBase {
             case MIDTRANSFER:
                 lvArm.setPosition(.6);
                 rvArm.setPosition(.6);
+                break;
+            case RAMSPEC:
+                lvArm.setPosition(.56);
+                rvArm.setPosition(.56);
                 break;
         }
     }
